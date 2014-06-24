@@ -1,8 +1,7 @@
 __author__ = 'joncomo'
 
-from PIL import Image, ImageTk
-import Network
 import SDR
+from PIL import Image
 
 class ImageEncoder():
 
@@ -17,7 +16,7 @@ class ImageEncoder():
         image = self.images[0]
         self.size = image.size[0]
 
-    def perceiveNext(self) -> SDR:
+    def perceiveNext(self):
         sdr = self.perceiveImage(self.images[self.index])
 
         self.index += 1
@@ -26,7 +25,7 @@ class ImageEncoder():
 
         return sdr
 
-    def perceiveImage(self, image) -> SDR:
+    def perceiveImage(self, image):
         pixels = image.load()
         sdr = SDR.SDR(self.size)
 
