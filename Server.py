@@ -3,12 +3,18 @@ __author__ = 'joncomo'
 import Network
 import os
 #from bottle import route, run, template, post, request, redirect
-from flask import Flask, app, render_template, request, redirect
+from flask import Flask, app, render_template, request, redirect, url_for
+
+DEBUG = True
 
 class Main():
     network = None
-    # outputURL = "http://www.redflood.com/CLA/output.png" #SERVER
-    outputURL = "http://localhost/~joncomo/CLA/output.png" #LOCAL
+    outputURL = None
+
+    if DEBUG:
+        outputURL = "http://localhost/~joncomo/CLA/output.png"  #LOCAL
+    else:
+        outputURL = "http://www.redflood.com/CLA/output.png"    #SERVER
 
     def __init__(self):
         self.network = Network.Network(size=16)
@@ -27,19 +33,20 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return render_template('indexF.html', networkSize=main.network.size, outputURL=main.outputURL)
+    return render_template('index.html', networkSize=main.network.size, networkLayers=main.network.layers, outputURL=main.outputURL)
 
-@app.route('/create', methods=["POST"])
+@app.route('/create', methods=["POST", "GET"])
 def create():
-    networkSize = int(request.forms.get('size'))
-    main.network = Network.Network(size=networkSize)
+    newSize = int(request.form['size'])
+    layerCount = int(request.form['layers'])
+    main.network = Network.Network(size=newSize, layers=layerCount)
     main.randomize()
-    redirect("/")
+    return index()
 
-@app.route('/randomize')
+@app.route('/randomize', methods=["POST", "GET"])
 def randomize():
     main.randomize()
-    redirect("/")
+    return index()
 
 # Accepting file uploads to the server
 @app.route('/upload', methods=["POST"])
@@ -54,6 +61,6 @@ def do_upload():
     for upload in uploads:
         upload.save(save_path, overwrite=True) # appends upload.filename automatically
 
-    redirect("/")
+    return index()
 
-app.run(host='0.0.0.0', port=8080)
+app.run(host='0.0.0.0', port=8080, debug=DEBUG)
