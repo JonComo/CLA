@@ -4,6 +4,8 @@ import Network
 import os
 #from bottle import route, run, template, post, request, redirect
 from flask import Flask, app, render_template, request, redirect, url_for
+from flask_cors import cross_origin
+import json
 
 DEBUG = True
 
@@ -37,13 +39,14 @@ def index():
 
 @app.route('/create', methods=["POST", "GET"])
 def create():
-    newSize = int(request.form['size'])
-    layerCount = int(request.form['layers'])
-    main.network = Network.Network(size=newSize, layers=layerCount)
+    new_size = int(request.form['size'])
+    layer_count = int(request.form['layers'])
+    main.network = Network.Network(size=new_size, layers=layer_count)
     main.randomize()
     return index()
 
-@app.route('/randomize', methods=["POST", "GET"])
+@app.route('/randomize', methods=["GET"])
+@cross_origin(headers=['Content-Type'])
 def randomize():
     main.randomize()
     return index()
@@ -62,5 +65,18 @@ def do_upload():
         upload.save(save_path, overwrite=True) # appends upload.filename automatically
 
     return index()
+
+@app.route('/data', methods=["GET"])
+@cross_origin(headers=['Content-Type'])
+def get_data():
+    response = [["0" for x in range(main.network.size)] for i in range(main.network.size)]
+
+    for x in range(main.network.size):
+        for y in range(main.network.size):
+            neuron = main.network.neurons[0][x-1][y-1]
+            response[x][y] = neuron.energy
+
+
+    return json.dumps(response)
 
 app.run(host='0.0.0.0', port=8080, debug=DEBUG)
