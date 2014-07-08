@@ -2,12 +2,11 @@ __author__ = 'joncomo'
 
 import Network
 import os
-#from bottle import route, run, template, post, request, redirect
-from flask import Flask, app, render_template, request, redirect, url_for
+from flask import Flask, app, request
 from flask_cors import cross_origin
 import json
 
-DEBUG = True
+DEBUG = False
 
 class Main():
     network = None
@@ -35,7 +34,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return render_template('index.html', networkSize=main.network.size, networkLayers=main.network.layers, outputURL=main.outputURL)
+    return "CLA v0.1"
 
 @app.route('/create', methods=["POST", "GET"])
 def create():
@@ -74,7 +73,7 @@ def get_data():
     for x in range(main.network.size):
         for y in range(main.network.size):
             neuron = main.network.neurons[0][x-1][y-1]
-            response[x][y] = neuron.energy
+            response[x][y] = neuron.description()
 
 
     return json.dumps(response)
