@@ -30,8 +30,10 @@ function mouseMove(event){
 			scene.translationX += diffX/scene.scale;
 			scene.translationY += diffY/scene.scale;
 		}else{
-			scene.rotationY += diffX/100;
-			scene.rotationX += diffY/100;
+			scene.rotationHorizontal += diffX/100;
+			scene.rotationVertical += diffY/100;
+
+			console.log("Rotation x: " + scene.rotationX + " y: " + scene.rotationY + " z: " + scene.rotationZ);
 		}
 	}else{
         //highlight point that mouse is closest to
@@ -97,12 +99,19 @@ $( document ).ready(function() {
 });
 
 //Interface
-$("#buttonRefresh").click( function(){
+$("#buttonRefresh").click(function(){
 	reloadNetworkData();
 });
 
-$("#buttonRandomize").click( function(){
+$("#buttonRandomize").click(function(){
 	randomizeNetwork();
+});
+
+$("#buttonCreate").click(function(){
+	console.log("Creating network: " + $("#networkSize").val());
+	$.post(SERVER_URL + "/create", {"size": $("networkSize").value}, function(){
+		console.log("Posting creation data");
+	})
 });
 
 //Network
@@ -130,19 +139,16 @@ function reloadNetworkData(){
 		var value = 0;
 		var parsed = JSON.parse(data);
 		
-		for (var x = 0; x < parsed.length; x++)
+		for (var i = 0; i < parsed.length; i++)
 		{
-			for (var y = 0; y < parsed[0].length; y++)
-			{
-				neuron = parsed[x][y];
-				
-				var xp = (parseFloat(neuron["p"][0]) - 0.5 ) * 200;
-				var yp = (parseFloat(neuron["p"][1]) - 0.5 ) * 200;
-				var zp = (parseFloat(neuron["p"][2]) - 0.5 ) * 200;
-				
-				var point = new TDPoint(xp, yp, zp);
-				scene.points.push(point);
-			}
+			neuron = parsed[i];
+
+			var xp = (parseFloat(neuron["p"][0]) - 0.5 ) * 200;
+			var yp = (parseFloat(neuron["p"][1]) - 0.5 ) * 200;
+			var zp = (parseFloat(neuron["p"][2]) - 0.5 ) * 200;
+
+			var point = new TDPoint(xp, yp, zp);
+			scene.points.push(point);
 		}
 		
 		$("#loading").fadeOut(50);

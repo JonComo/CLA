@@ -7,11 +7,13 @@ class Neuron:
     energy = 0
     network = None
     position = None
+    id = 0
 
-    def __init__(self, network, position=[0, 0, 0]):
+    def __init__(self, network, position=[0, 0, 0], id=0):
+        self.id = id
         self.network = network
-        self.weights = [[0 for i in range(network.size)] for j in range(network.size)]
-        self.position = position;
+        self.weights = []
+        self.position = position
         self.randomPosition()
 
     def processState(self):

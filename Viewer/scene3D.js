@@ -17,8 +17,8 @@ function TDScene(canvasName)
 	
 	this.matrix = new Matrix3D();
 	
-	this.rotationX = 0;
-	this.rotationY = 0;
+	this.rotationHorizontal = 0;
+	this.rotationVertical = 0;
 	
 	this.translationX = 0;
 	this.translationY = 0;
@@ -45,8 +45,14 @@ function TDScene(canvasName)
 		
 		this.matrix.identity();
 		this.matrix.scale(this.scale, this.scale, this.scale);
-		this.matrix.rotateX(this.rotationX);
-		this.matrix.rotateY(this.rotationY);
+
+		var limit = 3.141/2;
+		if (this.rotationVertical < -limit) this.rotationVertical = -limit;
+		if (this.rotationVertical > limit) this.rotationVertical = limit;
+		this.matrix.rotateY(this.rotationHorizontal);
+		this.matrix.rotateX(this.rotationVertical);
+		this.matrix.rotateZ(0);
+
 		this.matrix.translate(this.width/2 + this.translationX * this.scale, this.height/2 + this.translationY * this.scale, 0);
 		
 		this.context.fillStyle = "#000000";
@@ -99,10 +105,11 @@ function TDPoint(x, y, z)
 	this.render = function(scene){
 		var flat = this.flat(scene);
         var scale = flat.z/70 + 1;
-        if (scale < 1) scale = 1;
+        if (scale < 1.5) scale = 1.5;
 
 		if (this.isTargeted){
 			scale = 8;
+			this.red = 255;
 		}
 
         scene.context.fillStyle = rgbToHex(this.red, this.green, this.blue);
