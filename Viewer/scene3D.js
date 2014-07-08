@@ -105,14 +105,16 @@ function TDPoint(x, y, z)
 	this.render = function(scene){
 		var flat = this.flat(scene);
         var scale = flat.z/70 + 1;
-        if (scale < 1.5) scale = 1.5;
 
 		if (this.isTargeted){
-			scale = 8;
+			scale = 6;
 			this.red = 255;
 		}
 
-        scene.context.fillStyle = rgbToHex(this.red, this.green, this.blue);
+		if (scale < 1.5) scale = 1.5;
+		if (scale > 6) scale = 6;
+
+        scene.context.fillStyle = 'rgba('+this.red+', '+this.green+', '+this.blue+', 1)';
 		scene.context.fillRect(flat.x - scale/2, flat.y - scale/2, scale, scale);
 	}
 }
@@ -125,6 +127,8 @@ function TDLine(start, end)
 	
 	
 	this.render = function(scene){
+		scene.context.strokeStyle = 'rgba(0,0,0,0.1)';
+
 		var sFlat = this.start.flat(scene);
 		var eFlat = this.end.flat(scene);
 		

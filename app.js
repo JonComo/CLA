@@ -116,6 +116,8 @@ $("#buttonCreate").click(function(){
 
 //Network
 
+var networkData = [];
+
 function randomizeNetwork(){
 	$.get(SERVER_URL + "/randomize", function(data){
 		console.log("randomized");
@@ -135,24 +137,41 @@ function reloadNetworkData(){
 
 	$.ajax( SERVER_URL + "/data" )
 	  .done(function(data) {
-		  
-		var value = 0;
-		var parsed = JSON.parse(data);
-		
-		for (var i = 0; i < parsed.length; i++)
-		{
-			neuron = parsed[i];
 
-			var xp = (parseFloat(neuron["p"][0]) - 0.5 ) * 200;
-			var yp = (parseFloat(neuron["p"][1]) - 0.5 ) * 200;
-			var zp = (parseFloat(neuron["p"][2]) - 0.5 ) * 200;
-
-			var point = new TDPoint(xp, yp, zp);
-			scene.points.push(point);
-		}
+		networkData = JSON.parse(data);
 		
 		$("#loading").fadeOut(50);
+
+		constructClientNetwork();
 		
 		console.log("Got data" + value);
 	});
+}
+
+function constructClientNetwork(){
+	for (var i = 0; i < networkData.length; i++)
+	{
+		var neuron = networkData[i];
+		var nextNeuron;
+		if (i < networkData.length-1){
+			nextNeuron = networkData[i+1];
+		}
+
+		var xp = (parseFloat(neuron["p"][0]) - 0.5 ) * 200;
+		var yp = (parseFloat(neuron["p"][1]) - 0.5 ) * 200;
+		var zp = (parseFloat(neuron["p"][2]) - 0.5 ) * 200;
+
+		var point = new TDPoint(xp, yp, zp);
+		scene.points.push(point);
+
+		if (nextNeuron){
+			var x2 = (parseFloat(nextNeuron["p"][0]) - 0.5 ) * 200;
+			var y2 = (parseFloat(nextNeuron["p"][1]) - 0.5 ) * 200;
+			var z2 = (parseFloat(nextNeuron["p"][2]) - 0.5 ) * 200;
+			var point2 = new TDPoint(x2, y2, z2);
+			var line = new TDLine(point, point2);
+			scene.lines.push(line);
+		}
+
+	}
 }

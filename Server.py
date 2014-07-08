@@ -17,7 +17,7 @@ class Main():
         outputURL = "http://www.redflood.com/CLA/output.png"    # SERVER
 
     def __init__(self):
-        self.network = Network(size=2000)
+        self.network = Network(size=1000)
 
 """Startup the main class"""
 main = Main()
@@ -29,11 +29,11 @@ app = Flask(__name__)
 def index():
     return "CLA v0.1"
 
-@app.route('/create/<int:size>', methods=["POST"])
+@app.route('/create<int:size>', methods=["POST", "GET"])
 @cross_origin(headers=['Content-Type'])
 def create(size):
     main.network = Network(size=size)
-    return index()
+    return "Creating network of size %d"%size
 
 @app.route('/randomize', methods=["GET"])
 @cross_origin(headers=['Content-Type'])
