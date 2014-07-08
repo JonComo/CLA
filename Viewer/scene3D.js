@@ -50,8 +50,7 @@ function TDScene(canvasName)
 		this.matrix.translate(this.width/2 + this.translationX * this.scale, this.height/2 + this.translationY * this.scale, 0);
 		
 		this.context.fillStyle = "#000000";
-		for (var i = 0; i < this.points.length; i++)
-		{
+		for (var i = 0; i < this.points.length; i++){
 			point = this.points[i];
 			point.render(this);
 		}
@@ -78,17 +77,36 @@ function TDPoint(x, y, z)
 	this.x = x;
 	this.y = y;
 	this.z = z;
+
+    this.flatX = 0;
+    this.flatY = 0;
+
+	this.isTargeted = false; //rolled over by mouse
+
+    this.red = 0;
+    this.green = 0;
+    this.blue = 0;
 	
 	this.flat = function(scene){
 		var transformed = scene.matrix.transformPoint(this);
-		
-		return {"x": transformed.x, "y": transformed.y};
+
+        this.flatX = transformed.x;
+        this.flatY = transformed.y;
+
+		return {"x": transformed.x, "y": transformed.y, "z": transformed.z};
 	}
 	
 	this.render = function(scene){
 		var flat = this.flat(scene);
-		
-		scene.context.fillRect(flat.x, flat.y, 2, 2);
+        var scale = flat.z/70 + 1;
+        if (scale < 1) scale = 1;
+
+		if (this.isTargeted){
+			scale = 8;
+		}
+
+        scene.context.fillStyle = rgbToHex(this.red, this.green, this.blue);
+		scene.context.fillRect(flat.x - scale/2, flat.y - scale/2, scale, scale);
 	}
 }
 
@@ -109,6 +127,25 @@ function TDLine(start, end)
 		scene.context.stroke();
 	}
 }
+
+//Color functions
+
+function randomColor() {
+    var r = 255*Math.random()|0,
+        g = 255*Math.random()|0,
+        b = 255*Math.random()|0;
+    return 'rgb(' + r + ',' + g + ',' + b + ')';
+}
+
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
 
 // Main Loop
 // Cross-browser support for requestAnimationFrame

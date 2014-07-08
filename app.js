@@ -33,7 +33,29 @@ function mouseMove(event){
 			scene.rotationY += diffX/100;
 			scene.rotationX += diffY/100;
 		}
-	}
+	}else{
+        //highlight point that mouse is closest to
+		var rect = scene.canvas.getBoundingClientRect();
+		var mouseX = event.x - rect.left;
+		var mouseY = event.y - rect.top;
+
+        var closestPoint;
+        var dist = 10;
+        for (var i = 0; i < scene.points.length; i++){
+            var point = scene.points[i];
+			point.isTargeted = false;
+
+            var testDist = Math.sqrt(Math.pow(point.flatX - mouseX, 2) + Math.pow(point.flatY - mouseY, 2));
+            if (testDist < dist){
+                dist = testDist;
+                closestPoint = point;
+            }
+        }
+
+        if (closestPoint){
+			closestPoint.isTargeted = true;
+        }
+    }
 	
 	lastX = event.x;
 	lastY = event.y;
@@ -127,21 +149,4 @@ function reloadNetworkData(){
 		
 		console.log("Got data" + value);
 	});
-}
-
-//Color functions
-function randomColor() {
-    var r = 255*Math.random()|0,
-        g = 255*Math.random()|0,
-        b = 255*Math.random()|0;
-    return 'rgb(' + r + ',' + g + ',' + b + ')';
-}
-
-function componentToHex(c) {
-    var hex = c.toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
-}
-
-function rgbToHex(r, g, b) {
-    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }

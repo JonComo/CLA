@@ -28,8 +28,7 @@ class Main():
 """Startup the main class"""
 main = Main()
 
-"""Run up a default flask server to handle gets and post data"""
-
+"""Spin up a default flask server to handle gets and post data"""
 app = Flask(__name__)
 
 @app.route("/")
