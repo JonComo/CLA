@@ -1,0 +1,68 @@
+* {margin:0;padding:0;}/*remove all browser defaults*/
+
+body {
+	background-color: #FFFFFF;
+}
+
+h1 {
+	color: white;
+	text-shadow: 0px 2px 6px rgba(221, 221, 221, 0.67);
+	font-family: "Helvetica";
+}
+
+p {
+	color: black;
+	text-shadow: 0px 2px 6px rgba(221, 221, 221, 0.67);
+	font-size: 120%;
+	font-family: "Helvetica";
+}
+
+a {
+	text-decoration: none;
+}
+
+.button {
+	margin: 10px;
+	padding: 10px;
+	font-size: 200%;
+	font-family: "Helvetica";
+	cursor: pointer;
+}
+
+#header {
+	text-align: center;
+    background-color: red;
+    padding: 20px;
+	height:1cm;
+}
+
+#logo {
+	float:left;
+}
+
+#loadDiv {
+	float:right;
+}
+
+#content {
+	padding: 20px;
+	margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2cm;
+    width: 70%;
+}
+
+#left {
+	float: left;
+	width: 50%;
+}
+
+#right {
+	float: right;
+	width: 50%;
+}
+
+canvas {
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	box-shadow: 0px 3px 6px #EEEEEE;
+}

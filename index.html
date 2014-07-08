@@ -1,0 +1,37 @@
+<html>
+<head>
+	<title>RedFlood Personal Assistant</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<div id="header">
+	<div id="logo">
+		<a href="/"><h1>REDFLOOD</h1></a>
+	</div>
+	<div id="loadDiv">
+		<img id="loading" src="loading.gif">
+	</div>
+</div>
+<div id="content">
+	<div id="left">
+		<p>
+			Intelligent Personal Assistant.
+		</p>
+		<div id="buttonRefresh" class="button">Refresh</div>
+		<div id="buttonRandomize" class="button">Randomize</div>
+	</div>
+	<div id="right">
+		<canvas id="canvas" width="400" height="400">
+		</canvas>
+	</div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="Viewer/Matrix3D.js"></script>
+<script src="Viewer/scene3D.js"></script>
+<script src="app.js"></script>
+
+
+</body>
+</html>
