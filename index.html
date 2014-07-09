@@ -15,15 +15,17 @@
 </div>
 <div id="content">
 	<div id="left">
+        <h2>Creation</h2>
+        <form method="POST">
+            <input type="text" id="count" placeholder="100">
+            <div id="buttonCreate" class="button">Create</div>
+        </form>
+
         <h2>Manipulation</h2>
 		<div id="buttonRefresh" class="button">Refresh</div>
 		<div id="buttonRandomize" class="button">Randomize</div>
-
-        <h2>Creation</h2>
-        <form method="POST">
-            <input type="text" name="size" placeholder="100">
-            <div id="buttonCreate" class="button">Create</div>
-        </form>
+        <div id="buttonProcess" class="button">Process State</div>
+        <div id="buttonRun" class="button">Run</div>
 	</div>
 	<div id="right">
 		<canvas id="canvas" width="400" height="400">

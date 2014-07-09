@@ -12,9 +12,10 @@ class Neuron:
     def __init__(self, network, position=[0, 0, 0], id=0):
         self.id = id
         self.network = network
-        self.weights = []
+        self.weights = {}
         self.position = position
         self.randomPosition()
+        self.randomize()
 
     def processState(self):
         self.energy *= 0.6
@@ -28,7 +29,8 @@ class Neuron:
 
     def addEnergy(self, energy):
         self.energy += energy
-        if (self.energy > 1): self.energy = 1
+        if self.energy > 1:
+            self.energy = 1
 
     def description(self):
         return {"p": self.position, "e": self.energy}

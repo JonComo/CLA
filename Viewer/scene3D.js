@@ -124,10 +124,13 @@ function TDLine(start, end)
 {
 	this.start = start;
 	this.end = end;
-	
+
+	this.red = 0;
+    this.green = 0;
+    this.blue = 0;
 	
 	this.render = function(scene){
-		scene.context.strokeStyle = 'rgba(0,0,0,0.1)';
+		scene.context.strokeStyle = 'rgba('+this.red+', '+this.green+', '+this.blue+', 0.1)';
 
 		var sFlat = this.start.flat(scene);
 		var eFlat = this.end.flat(scene);

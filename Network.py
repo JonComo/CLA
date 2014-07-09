@@ -1,5 +1,6 @@
 from Neuron import Neuron
 import json
+import random
 
 class Network:
     """Basic properties of the neural network: its size, current time and neurons"""
@@ -17,9 +18,20 @@ class Network:
     """Layout neurons based on probability, in traditional 6 layer cortical fashion"""
     def layoutNeurons(self):
         self.neurons = []
+        layerCount = 6.0
+        amountPerLayer = self.size/layerCount
+        currentAmount = 0
+        currentLayer = 0
         for i in range(self.size):
             neuron = Neuron(network=self, id=i)
             self.neurons.append(neuron)
+            if i >= currentAmount:
+                currentLayer += 1.0/layerCount
+                currentAmount += amountPerLayer
+            neuron.position[1] = currentLayer
+
+
+
 
     """Run through each neuron and allow it to process its current state"""
     def processState(self):

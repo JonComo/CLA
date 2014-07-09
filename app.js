@@ -87,7 +87,6 @@ scene.loop = function(){
 	document.body.scrollTop = "0px";
 }
 
-
 // Cross-browser support for requestAnimationFrame
 var w = window;
 requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
@@ -104,46 +103,50 @@ $("#buttonRefresh").click(function(){
 });
 
 $("#buttonRandomize").click(function(){
-	randomizeNetwork();
+	$.post(SERVER_URL + "/randomize", function(){
+		reloadNetworkData();
+	});
 });
 
 $("#buttonCreate").click(function(){
-	console.log("Creating network: " + $("#networkSize").val());
-	$.post(SERVER_URL + "/create", {"size": $("networkSize").value}, function(){
-		console.log("Posting creation data");
-	})
+	$.ajax({
+		url: SERVER_URL + '/create',
+		type: 'POST',
+		data: {'size': $("#count").val()},
+		success: function(){
+			reloadNetworkData();
+		}
+	});
+});
+
+$("#buttonProcess").click(function(){
+	processState()
+});
+
+$("#buttonRun").click(function(){
+	isRunning = !isRunning;
+	if (isRunning){
+		processState();
+	}
 });
 
 //Network
 
 var networkData = [];
+var isRunning = false;
 
-function randomizeNetwork(){
-	$.post(SERVER_URL + "/randomize", function(){
-		console.log("randomized");
-		reloadNetworkData();
-	});
-}
-
-function reloadNetworkData(){
-	/*
-	ctx.fillStyle = "#FFFFFF";
-	ctx.fillRect(0, 0, canvas.width, canvas.height);
-	*/
-	
-	scene.clear();
-	
+function reloadNetworkData()
+{
 	$("#loading").fadeIn(0);
-
-	$.ajax( SERVER_URL + "/data" )
-	  .done(function(data) {
+	$.ajax(SERVER_URL + "/data").done(function(data) {
+		scene.clear();
 
 		networkData = JSON.parse(data);
-		
-		$("#loading").fadeOut(50);
+
+		$("#loading").fadeOut(2000);
 
 		constructClientNetwork();
-		
+
 		console.log("Got data" + value);
 	});
 }
@@ -157,11 +160,12 @@ function constructClientNetwork(){
 			nextNeuron = networkData[i+1];
 		}
 
-		var xp = (parseFloat(neuron["p"][0]) - 0.5 ) * 200;
-		var yp = (parseFloat(neuron["p"][1]) - 0.5 ) * 200;
-		var zp = (parseFloat(neuron["p"][2]) - 0.5 ) * 200;
+		var xp = (parseFloat(neuron['p'][0]) - 0.5 ) * 200;
+		var yp = (parseFloat(neuron['p'][1]) - 0.5 ) * 200;
+		var zp = (parseFloat(neuron['p'][2]) - 0.5 ) * 200;
 
 		var point = new TDPoint(xp, yp, zp);
+		point.blue = parseInt(parseFloat(neuron['e']) * 255);
 		scene.points.push(point);
 
 		if (nextNeuron){
@@ -170,8 +174,19 @@ function constructClientNetwork(){
 			var z2 = (parseFloat(nextNeuron["p"][2]) - 0.5 ) * 200;
 			var point2 = new TDPoint(x2, y2, z2);
 			var line = new TDLine(point, point2);
+			line.blue = point.blue;
 			scene.lines.push(line);
 		}
 
 	}
+}
+
+function processState(){
+	$.post(SERVER_URL + "/processState", function(){
+		reloadNetworkData();
+
+		if (isRunning){
+			setTimeout(processState, 200);
+		}
+	});
 }
