@@ -125,9 +125,17 @@ $("#buttonProcess").click(function(){
 
 $("#buttonRun").click(function(){
 	isRunning = !isRunning;
+	var color = '#FF0000';
 	if (isRunning){
 		processState();
+		$("#buttonRun").text("Stop");
+		color = '#0000FF';
+	}else{
+		showLoading(false);
+		$("#buttonRun").text("Run");
 	}
+
+	$("#buttonRun").animate({backgroundColor:color}, 200);
 });
 
 //Network
@@ -137,13 +145,14 @@ var isRunning = false;
 
 function reloadNetworkData()
 {
-	$("#loading").fadeIn(0);
+	showLoading(true);
+
 	$.ajax(SERVER_URL + "/data").done(function(data) {
 		scene.clear();
 
 		networkData = JSON.parse(data);
 
-		$("#loading").fadeOut(2000);
+		showLoading(false);
 
 		constructClientNetwork();
 
@@ -189,4 +198,14 @@ function processState(){
 			setTimeout(processState, 200);
 		}
 	});
+}
+
+function showLoading(show){
+	if (show){
+		$("#loading").fadeIn(0);
+	}else{
+		if (!isRunning) {
+			$("#loading").fadeOut(100);
+		}
+	}
 }
