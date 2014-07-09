@@ -3,26 +3,45 @@ __author__ = 'joncomo'
 from Network import Network
 from flask import Flask, app, request
 from flask_cors import cross_origin
+from flask_restful import Resource, Api
 import json
 
-DEBUG = False
+DEBUG = True
 
+app = Flask(__name__)
+api = Api(app)
+
+network = Network(size=1000)
+
+class NetworkData(Resource):
+    def get(self):
+        print("GET METHOD")
+        return network.data(), 200, {"Access-Control-Allow-Origin": "*"}
+
+    def randomize(self):
+        print("RANDOMIZE METHOD")
+        network.randomize(), 200, {"Access-Control-Allow-Origin": "*"}
+
+api.add_resource(NetworkData, '/', '/data', '/create', '/randomize')
+
+app.run(host='0.0.0.0', port=8080, debug=DEBUG)
+
+
+
+
+
+
+
+
+"""
 class Main():
     network = None
-    outputURL = None
-
-    if DEBUG:
-        outputURL = "http://localhost/~joncomo/CLA/output.png"  # LOCAL
-    else:
-        outputURL = "http://www.redflood.com/CLA/output.png"    # SERVER
 
     def __init__(self):
         self.network = Network(size=1000)
 
-"""Startup the main class"""
 main = Main()
 
-"""Spin up a default flask server to handle gets and post data"""
 app = Flask(__name__)
 
 @app.route("/")
@@ -68,4 +87,4 @@ def get_data():
 
     return json.dumps(response)
 
-app.run(host='0.0.0.0', port=8080, debug=DEBUG)
+app.run(host='0.0.0.0', port=8080, debug=DEBUG) """

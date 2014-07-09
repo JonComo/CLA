@@ -1,4 +1,5 @@
 from Neuron import Neuron
+import json
 
 class Network:
     """Basic properties of the neural network: its size, current time and neurons"""
@@ -29,3 +30,12 @@ class Network:
     """Randomize each neuron's energy value for testing purposes"""
     def randomize(self):
         self.layoutNeurons()
+
+    def data(self):
+        response = []
+
+        for i in range(self.size):
+            neuron = self.neurons[i]
+            response.append(neuron.description())
+
+        return json.dumps(response)

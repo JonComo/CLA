@@ -119,7 +119,7 @@ $("#buttonCreate").click(function(){
 var networkData = [];
 
 function randomizeNetwork(){
-	$.get(SERVER_URL + "/randomize", function(data){
+	$.post(SERVER_URL + "/randomize", function(){
 		console.log("randomized");
 		reloadNetworkData();
 	});
