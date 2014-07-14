@@ -155,8 +155,6 @@ function reloadNetworkData()
 		showLoading(false);
 
 		constructClientNetwork();
-
-		console.log("Got data" + value);
 	});
 }
 

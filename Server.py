@@ -61,12 +61,6 @@ def do_upload():
 @app.route('/data', methods=["GET"])
 @cross_origin()
 def get_data():
-    response = []
-
-    for i in range(main.network.size):
-        neuron = main.network.neurons[i]
-        response.append(neuron.description())
-
-    return json.dumps(response)
+    return main.network.data()
 
 app.run(host='0.0.0.0', port=8080, debug=DEBUG)
